@@ -16,7 +16,7 @@ struct Task {
 class TaskManager {
 private:
     vector<Task> tasks;
-    map<string, vector<int>> scores; // Store scores for each group
+    map<string, vector<int>> scores; // Store scores for each student
 
 public:
     // Add a task
@@ -24,32 +24,32 @@ public:
         tasks.push_back({ name, max_score });
     }
 
-    // Add scores for a group
-    void add_scores(string group, vector<int> group_scores) {
-        scores[group] = group_scores;
+    // Add scores for a student
+    void add_scores(string student, vector<int> student_scores) {
+        scores[student] = student_scores;
     }
 
-    // Calculate overall result for a group
-    double calculate_result(string group) {
+    // Calculate overall result for a student
+    double calculate_result(string student) {
         double total_score = 0.0;
-        vector<int> group_scores = scores[group];
-        int num_tasks = min(group_scores.size(), tasks.size());
+        vector<int> student_scores = scores[student];
+        int num_tasks = min(student_scores.size(), tasks.size());
         for (int i = 0; i < num_tasks; i++) {
             // Check and adjust scores
-            if (group_scores[i] < 0) {
-                group_scores[i] = 0;
+            if (student_scores[i] < 0) {
+                student_scores[i] = 0;
             }
-            else if (group_scores[i] > tasks[i].max_score) {
-                group_scores[i] = tasks[i].max_score;
+            else if (student_scores[i] > tasks[i].max_score) {
+                student_scores[i] = tasks[i].max_score;
             }
             // Add score to total
-            total_score += group_scores[i];
+            total_score += student_scores[i];
         }
         // Return average score
         return total_score / tasks.size();
     }
 
-    // Get scores for all groups
+    // Get scores for all students
     map<string, vector<int>> get_scores() const {
         return scores;
     }
@@ -74,26 +74,27 @@ int main() {
     task_manager.add_task("Physics", 15);
     task_manager.add_task("History", 5);
 
-    // Input groups and scores
-    int num_groups;
-    cout << "Enter number of groups: ";
-    cin >> num_groups;
+    // Input students and scores
+    int num_students;
+    cout << "Enter number of students in this group: ";
+    cin >> num_students;
 
-    for (int i = 1; i <= num_groups; i++) {
-        string group_name;
-        cout << "Enter name for group " << i << ": ";
-        cin >> group_name;
+    for (int i = 1; i <= num_students; i++) {
+        string student_name;
+        cout << "Enter student name " << i << ": ";
+        cin >> student_name;
 
-        vector<int> group_scores;
+        vector<int> student_scores;
         for (int j = 0; j < task_manager.num_tasks(); j++) {
             int score;
-            cout << "Enter score for " << task_manager.get_task(j).name << " in group " << group_name << ": ";
+            cout << "Enter " << task_manager.get_task(j).name << " score for " << student_name << ": ";
             cin >> score;
-            group_scores.push_back(score);
+            student_scores.push_back(score);
         }
 
-        task_manager.add_scores(group_name, group_scores);
+        task_manager.add_scores(student_name, student_scores);
     }
+
 
     // Save scores to file
     string file_name;
@@ -110,14 +111,14 @@ int main() {
         }
         out_file << endl;
 
-        // Write group scores
+        // Write student scores
         map<string, vector<int>> scores = task_manager.get_scores();
         for (auto score_pair : scores) {
             out_file << score_pair.first << ",";
-            vector<int> group_scores = score_pair.second;
-            for (int i = 0; i < group_scores.size(); i++) {
-                out_file << group_scores[i];
-                if (i < group_scores.size() - 1) {
+            vector<int> student_scores = score_pair.second;
+            for (int i = 0; i < student_scores.size(); i++) {
+                out_file << student_scores[i];
+                if (i < student_scores.size() - 1) {
                     out_file << ",";
                 }
             }
@@ -130,11 +131,11 @@ int main() {
         cout << "Unable to open file " << file_name << " for writing." << endl;
     }
 
-    // Calculate and print results for each group
+    // Calculate and print results for each student
     map<string, vector<int>> scores = task_manager.get_scores();
     for (auto score_pair : scores) {
-        string group_name = score_pair.first;
-        double result = task_manager.calculate_result(group_name);
-        cout << "Result for group " << group_name << ": " << result << endl;
+        string student_name = score_pair.first;
+        double result = task_manager.calculate_result(student_name);
+        cout  << student_name << " result: " << result << endl;
     }
 }

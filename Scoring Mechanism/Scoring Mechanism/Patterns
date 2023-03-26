@@ -1,0 +1,7 @@
+This code uses the following design patterns:
+
+1) Structure - used to store information about tasks.
+2) Class - used to store and evaluate the results of tasks.
+3) Composite - used to store a list of tasks in the form of a vector.
+4) Map - used to store the results of each student in the form of a key-value (student name - list of results).
+5) Iterator - used to go through the list of tasks and student results.
